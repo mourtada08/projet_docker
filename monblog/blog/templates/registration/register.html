@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block content %}
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to right,rgb(218, 231, 246),rgba(93, 191, 248, 0.54));
+        text-align: center;
+        padding: 20px;
+    }
+
+    h2 {
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    form {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        width: 350px;
+        text-align: left;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 16px;
+        margin-bottom: 15px;
+    }
+
+    button {
+        background-color: #28a745;
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+        width: 100%;
+    }
+
+    button:hover {
+        background-color: #218838;
+        transform: scale(1.05);
+    }
+</style>
+<h2>Inscription</h2>
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn btn-success">Créer un compte</button>
+</form>
+{% endblock %}

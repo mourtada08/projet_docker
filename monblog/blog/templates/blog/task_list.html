@@ -1,0 +1,231 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h2>Mes Tâches</h2>
+<style>
+    body {
+        font-family: 'Poppins', sans-serif;
+        background: linear-gradient(to right,rgb(218, 231, 246),rgba(93, 191, 248, 0.54));
+        margin: 0;
+        padding: 20px;
+    }
+    #todo { background-color: #f8d7da; border-left: 5px solid #dc3545; }
+    #in_progress { background-color: #fff3cd; border-left: 5px solid #ffc107; }
+        #done { background-color: #d4edda; border-left: 5px solid #28a745; }
+
+
+    h2 {
+        text-align: center;
+        color: #343a40;
+        margin-bottom: 20px;
+    }
+
+    .row {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+    }
+
+    .col {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        width: 300px;
+    }
+
+    .list-group-item {
+        padding: 15px;
+        border-radius: 6px;
+        margin-bottom: 10px;
+        transition: 0.3s;
+    }
+
+    .list-group-item:hover {
+        background-color: #e9ecef;
+        transform: scale(1.02);
+    }
+
+    button {
+        background-color: #007bff;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+        transform: scale(1.05);
+    }
+    .list-group-item.dragging {
+    opacity: 0.5;
+    transform: scale(1.1);
+}
+
+</style>
+{% if user.is_superuser %}
+    <p class="alert alert-info"><strong>Vue Administrateur :</strong> Vous voyez toutes les tâches.</p>
+{% endif %}
+
+<!-- Formulaire de recherche -->
+<form method="GET" class="mb-3">
+    <input type="text" name="q" placeholder="Rechercher une tâche..." class="form-control">
+    <button type="submit" class="btn btn-primary mt-2">Rechercher</button>
+    
+</form>
+<div class="filter-buttons">
+    <button onclick="filterTasks('all')" class="btn btn-secondary">Toutes</button>
+    <button onclick="filterTasks('TODO')" class="btn btn-danger">À faire</button>
+    <button onclick="filterTasks('IN_PROGRESS')" class="btn btn-warning">En cours</button>
+    <button onclick="filterTasks('DONE')" class="btn btn-success">Terminée</button>
+</div>
+
+
+
+<div class="row">
+    <div class="col">
+        <h3>À faire</h3>
+        <ul class="list-group" id="todo">
+            {% for task in tasks %}
+                {% if task.statut == "TODO" %}
+                <li class="list-group-item draggable" draggable="true" data-task-id="{{ task.id }}",data-status="{{ task.statut }}">
+                    <strong>{{ task.titre }}</strong> ({{ task.get_statut_display }})
+                    <br>
+                    <small class="text-muted">Créé le : {{ task.created_at|date:"d M Y à H:i" }}</small>
+                    {% if task.assigned_to %}
+                        <span class="badge bg-info">Assignée à : {{ task.assigned_to.username }}</span>
+                    {% else %}
+                        <span class="badge bg-warning">Non assignée</span>
+                    {% endif %}
+                    
+                    
+                    {% if user.is_superuser %}
+    <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">Modifier</a>
+    <form method="POST" action="{% url 'task_delete' task.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+            Supprimer
+        </button>
+        
+    </form>
+{% endif %}
+
+</form>
+</form>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col">
+        <h3>En cours</h3>
+        <ul class="list-group" id="in_progress">
+            {% for task in tasks %}
+                {% if task.statut == "IN_PROGRESS" %}
+                <li class="list-group-item draggable" draggable="true" data-task-id="{{ task.id }}",data-status="{{ task.statut }}">
+                    <strong>{{ task.titre }}</strong> ({{ task.get_statut_display }})
+                    <br>
+                    <small class="text-muted">Créé le : {{ task.created_at|date:"d M Y à H:i" }}</small>
+                    {% if task.assigned_to %}
+                        <span class="badge bg-info">Assignée à : {{ task.assigned_to.username }}</span>
+                    {% else %}
+                        <span class="badge bg-warning">Non assignée</span>
+                    {% endif %}
+                    {% if user.is_superuser %}
+    <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">Modifier</a>
+    <form method="POST" action="{% url 'task_delete' task.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+            Supprimer
+        </button>
+    </form>
+{% endif %}
+
+</form>
+</form>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="col">
+        <h3>Terminée</h3>
+        <ul class="list-group" id="done">
+            {% for task in tasks %}
+                {% if task.statut == "DONE" %}
+                <li class="list-group-item draggable" draggable="true" data-task-id="{{ task.id }}",data-status="{{ task.statut }}">
+                    <strong>{{ task.titre }}</strong> ({{ task.get_statut_display }})
+                    <br>
+                    <small class="text-muted">Créé le : {{ task.created_at|date:"d M Y à H:i" }}</small>
+                    {% if task.assigned_to %}
+                        <span class="badge bg-info">Assignée à : {{ task.assigned_to.username }}</span>
+                    {% else %}
+                        <span class="badge bg-warning">Non assignée</span>
+                    {% endif %}
+                    <button onclick="markAsDone({{ task.id }})" class="btn btn-success btn-sm">✅ Terminer</button>
+
+{% if user.is_superuser %}
+    <a href="{% url 'task_update' task.id %}" class="btn btn-warning btn-sm">Modifier</a>
+    <form method="POST" action="{% url 'task_delete' task.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette tâche ?');">
+            Supprimer
+        </button>
+    </form>
+{% endif %}
+
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+<script>
+function filterTasks(status) {
+    let tasks = document.querySelectorAll('.list-group-item');
+    tasks.forEach(task => {
+        task.style.display = (status === 'all' || task.getAttribute('data-status') === status) ? 'block' : 'none';
+    });
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    let draggables = document.querySelectorAll(".draggable");
+    let containers = document.querySelectorAll(".list-group");
+
+    draggables.forEach(draggable => {
+        draggable.addEventListener("dragstart", () => {
+            draggable.classList.add("dragging");
+        });
+
+        draggable.addEventListener("dragend", () => {
+            draggable.classList.remove("dragging");
+        });
+    });
+
+    containers.forEach(container => {
+        container.addEventListener("dragover", e => {
+            e.preventDefault();
+            const draggable = document.querySelector(".dragging");
+            if (draggable) {
+                container.appendChild(draggable);
+                updateTaskStatus(draggable, container.id);
+            }
+        });
+    });
+
+    function updateTaskStatus(taskElement, newStatus) {
+        fetch(`/update_task_status/${taskElement.dataset.taskId}/${newStatus}/`, {
+            method: "POST",
+            headers: { "X-CSRFToken": "{{ csrf_token }}" }
+        });
+    }
+});
+</script>
+
+{% endblock %}

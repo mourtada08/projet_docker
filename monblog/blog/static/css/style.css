@@ -1,0 +1,108 @@
+/* 🌍 Styles généraux */
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f4f7fc;
+    color: #333;
+}
+
+.container {
+    max-width: 1100px;
+    margin: auto;
+}
+
+/* 🎯 En-tête */
+h2 {
+    text-align: center;
+    font-size: 26px;
+    font-weight: bold;
+    color: #1a73e8;
+    margin-bottom: 20px;
+}
+
+/* 🔍 Formulaire de recherche */
+form input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 2px solid #ddd;
+    outline: none;
+    transition: 0.3s;
+}
+
+form input:focus {
+    border-color: #1a73e8;
+    box-shadow: 0 0 8px rgba(26, 115, 232, 0.3);
+}
+
+/* 🗂️ Sections des tâches */
+.list-group {
+    min-height: 300px;
+    padding: 15px;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* 📌 Tâches */
+.list-group-item {
+    background: linear-gradient(135deg, #f3f4f6, #ffffff);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: 0.3s;
+    border-left: 5px solid #1a73e8;
+}
+
+.list-group-item:hover {
+    background: #f1f3f5;
+    transform: scale(1.02);
+}
+
+/* 🎭 Badges */
+.badge {
+    font-size: 14px;
+    padding: 6px 10px;
+    border-radius: 6px;
+}
+
+.badge.bg-info {
+    background-color: #1a73e8 !important;
+    color: white;
+}
+
+.badge.bg-warning {
+    background-color: #ff9800 !important;
+    color: white;
+}
+
+/* 🎨 Boutons */
+.btn-outline-primary, .btn-outline-danger {
+    padding: 8px 14px;
+    font-size: 14px;
+    border-radius: 6px;
+    transition: 0.3s;
+}
+
+.btn-outline-primary:hover {
+    background-color: #1a73e8;
+    color: white;
+}
+
+.btn-outline-danger:hover {
+    background-color: #e53935;
+    color: white;
+}
+
+/* 🏗️ Drag & Drop */
+.draggable {
+    cursor: grab;
+}
+
+.draggable:active {
+    cursor: grabbing;
+    opacity: 0.7;
+}
